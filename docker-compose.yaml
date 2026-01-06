@@ -437,7 +437,7 @@ services:
       - AWS_REGION=us-east-1
     ports:
       - "8888:8888"
-      - "8088:8080"
+      - "8090:8080"
       - "10000:10000"
       - "10001:10001"
 
@@ -455,7 +455,7 @@ services:
       "
     user: "0:0"
     ports:
-      - "8088:8088"
+      - "8089:8088"
     environment:
       SUPERSET_SECRET_KEY: Navsegda123Superset
       SQLALCHEMY_DATABASE_URI: postgresql+psycopg2://superset:superset@postgres:5432/superset
