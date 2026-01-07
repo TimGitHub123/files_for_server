@@ -59,7 +59,7 @@ cd ..
 ```bash
 sudo chmod -R 777 ./infrahome/
 ```
-Поздравляем, развертывание завершено!
+Поздравляем, развертывание завершено! Дальше перейдем к настройке отдельных инструментов
 
 ## **Получение IP сервера для доступа к инструментам**
 
@@ -92,6 +92,45 @@ IP используется для доступа ко всем инструме
 |	2 | Meta_postgres  	 | \<ваш_IP\> port 5434     | metabase   | metabase   | metabase        |
 |	3 | Postgres-iceberg | \<ваш_IP\> port 5435	    | iceberg    | iceberg    | iceberg_catalog |
 |	4 | bi_postgres    	 | \<ваш_IP\> port 5436     | postgres   | postgres   | postgres        |
+
+## **Донастройка SuperSet**
+
+Необходимо создать пользователя, под которым можно будет произвести вход
+```bash
+sudo docker exec -it superset superset fab create-admin \
+               --username superset \
+               --firstname Superset \
+               --lastname Admin \
+               --email admin@admin.com \
+               --password superset; \
+sudo docker exec -it superset superset db upgrade; \
+sudo docker exec -it superset superset load_examples; \
+sudo docker exec -it superset superset init;
+```
+
+Далее переходим в инструмент SuperSet, выполните следующую команду и перейдите по выведенной в терминале ссылке
+```bash
+ip=$(ip route get 8.8.8.8 | awk 'match($0,/src (\S*)/,a)&&$0=a[1]')
+echo "http://$ip:8089/"
+```
+
+Далее авторизируйтесь с логином и паролем из таблицы
+
+Теперь подключим базу данных к SuperSet-у
+- На главной странице найдите поле **Connect database**
+<img width="1348" height="725" alt="image" src="https://github.com/user-attachments/assets/93a553e4-089f-46f3-a734-bcb49246a3f5" />
+- Далее выбираем БД PostgreSQL
+<img width="505" height="719" alt="image" src="https://github.com/user-attachments/assets/bfdc31c3-918e-48b6-951f-68b9e972be01" />
+- Далее попадаем на следующую форму
+<img width="493" height="717" alt="image" src="https://github.com/user-attachments/assets/2ad1bf86-5fdf-4a23-8ade-db66bfeeee4c" />
+Здесь заполняем следующими данными:
+1. Host - IP сервера, который получали выше
+2. Port - 5436 (порт База данных bi_postgres из таблицы)
+3. Database name - postgres (имя База данных bi_postgres из таблицы)
+4. Username - iceberg (пользователь База данных bi_postgres из таблицы)
+5. Password - iceberg (пароль База данных bi_postgres из таблицы)
+6. Display Name - меняем по желанию
+7. Additional Parameters - осталяем пустым
 
 ## **Остановка. перезапуск, удаление контейнеров и образов**
 
@@ -145,3 +184,4 @@ docker images -f dangling=true
 docker volume ls -f dangling=true
 docker network ls --filter type=custom
 ```
+
