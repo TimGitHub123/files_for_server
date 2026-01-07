@@ -1,0 +1,17 @@
+FROM apache/superset:latest
+
+USER root
+
+# 1) Устанавливаем pip в venv, если его нет
+RUN if [ -x "/app/.venv/bin/python" ]; then \
+      /app/.venv/bin/python -m ensurepip --upgrade || true; \
+    fi
+
+# 2) Ставим psycopg2-binary в venv, если он есть, иначе в системный Python
+RUN if [ -x "/app/.venv/bin/python" ]; then \
+      /app/.venv/bin/python -m pip install --no-cache-dir psycopg2-binary; \
+    else \
+      pip install --no-cache-dir psycopg2-binary; \
+    fi
+
+USER superset
