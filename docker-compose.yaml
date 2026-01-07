@@ -471,7 +471,7 @@ services:
       meta_postgres:
         condition: service_healthy
 
- confluence-db:
+  confluence-db:
     image: postgres:13
     environment:
       POSTGRES_MULTIPLE_DATABASES: confluence
@@ -499,7 +499,7 @@ services:
     environment:
       ATL_JDBC_URL: jdbc:postgresql://confluence-db:5432/confluence?serverTimezone=UTC
       ATL_JDBC_USER: confluence
-      ATL_JDBC_PASSWORD: confluencepass
+      ATL_JDBC_PASSWORD: confluence
       ATL_DB_TYPE: postgresql
       JVM_MINIMUM_MEMORY: 2048m
       JVM_MAXIMUM_MEMORY: 4096m
