@@ -442,7 +442,10 @@ services:
       - "10001:10001"
 
   superset:
-    image: apache/superset:latest
+    # image: apache/superset:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.superset
     container_name: superset
     restart: unless-stopped
     command: >
@@ -461,6 +464,7 @@ services:
       SQLALCHEMY_DATABASE_URI: postgresql+psycopg2://superset:superset@postgres:5432/superset
       REDIS_URL: redis://redis:6379/0
       MAPBOX_API_KEY: ''
+      _PIP_ADDITIONAL_REQUIREMENTS: "psycopg2-binary"
     volumes:
       - superset_home:/app/superset_home
     depends_on:
